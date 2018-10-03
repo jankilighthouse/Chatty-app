@@ -18,29 +18,55 @@ class App extends Component {
           id:2,
           username: "Anonymous",
           content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-    }
-  ]
+        }
+      ]
 
-}
-    this.onNewMessage = this.onNewMessage.bind(this);
-    this.onNewUser = this.onNewUser.bind(this);
+    }
+      this.onNewMessage = this.onNewMessage.bind(this);
+      this.onNewUser = this.onNewUser.bind(this);
   }
+
   componentDidMount() {
     console.log("componentDidMount <App />");
+    const websocket = new WebSocket ('ws://localhost:3001');
+    this.socket = websocket;
+    websocket.onopen = (event) => {
+    console.log('Connected to server', event);
+     }
+
+     websocket.onmessage = (event) => {
+       const data = JSON.parse(event.data);
+        console.log(data);
+
+       switch(data.type) {
+        case 'incMessage':
+        const incMessage = data;
+        const messages= this.state.messages.concat(incMessage);
+        this.setState({messages:messages});
+        break;
+
+        default:
+          throw new Error('Unknown event type ' + data.type);
+       }
+     }
 
   }
+
  onNewMessage(msg) {
     // console.log(msg);
     let newId = this.state.messages.length + 1;
     let newMessage = {id:newId,username: msg.username,content: msg.content};
     let templist = this.state.messages;
-    templist.push(newMessage);
-    this.setState({
-          messages: templist
-      })
+    this.socket.send(JSON.stringify(newMessage));
+    // templist.push(newMessage);
+    // this.setState({
+    //       messages: templist
+    //   })
 
   }
   onNewUser(username) {
+
+    this.socket.send(JSON.stringify(username));
     this.setState({
           currentUser: {name:username}
       })
