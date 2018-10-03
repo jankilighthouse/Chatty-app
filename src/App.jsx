@@ -5,23 +5,10 @@ import ChatBar from './ChatBar.jsx';
 class App extends Component {
   constructor(props) {
     super(props);
-
-    this.state =
-            {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        { id:1,
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-        },
-        {
-          id:2,
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }
-      ]
-
-    }
+    this.state = {
+      currentUser: {name: "Bob"},
+      messages: [] // messages coming from the server will be stored here as they arrive
+    };
       this.onNewMessage = this.onNewMessage.bind(this);
       this.onNewUser = this.onNewUser.bind(this);
   }
@@ -35,6 +22,7 @@ class App extends Component {
      }
 
      websocket.onmessage = (event) => {
+      console.log(event);
        const data = JSON.parse(event.data);
         console.log(data);
 
@@ -60,8 +48,8 @@ class App extends Component {
 
  onNewMessage(msg) {
     // console.log(msg);
-    let newId = this.state.messages.length + 1;
-    let newMessage = {type:'postmessage',id:newId,username: msg.username,content: msg.content};
+    // let newId = this.state.messages.length + 1;
+    let newMessage = {type:'postmessage',username: msg.username,content: msg.content};
     let templist = this.state.messages;
     this.socket.send(JSON.stringify(newMessage));
     // templist.push(newMessage);

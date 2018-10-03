@@ -1,5 +1,7 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
+const uuidV3 = require('uuid');
+
 
 // Set the port to 3001
 const PORT = 3001;
@@ -20,20 +22,18 @@ wss.broadcast = function broadcast(data) {
 
     })
    }
-
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
 // Broadcast to all.
-
-
-    ws.on('message',(clientData) => {
+   ws.on('message',(clientData) => {
     const data = JSON.parse(clientData);
     console.log('HELLOOOOOOOO',data)
 
       switch(data.type){
         case 'postmessage':
         data.type = 'incMessage';
+        data.id =uuidV3();
         sharedMessage=data;
         wss.broadcast(sharedMessage);
         break;
