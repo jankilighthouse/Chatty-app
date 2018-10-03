@@ -45,6 +45,12 @@ class App extends Component {
         this.setState({messages:messages});
         break;
 
+        case 'incUser':
+        const incUser = data;
+        const currentUser = this.state.currentUser.name.concat(incUser);
+        //this.setState({currentUser:currentUser})
+        break;
+
         default:
           throw new Error('Unknown event type ' + data.type);
        }
@@ -55,7 +61,7 @@ class App extends Component {
  onNewMessage(msg) {
     // console.log(msg);
     let newId = this.state.messages.length + 1;
-    let newMessage = {id:newId,username: msg.username,content: msg.content};
+    let newMessage = {type:'postmessage',id:newId,username: msg.username,content: msg.content};
     let templist = this.state.messages;
     this.socket.send(JSON.stringify(newMessage));
     // templist.push(newMessage);
@@ -65,11 +71,10 @@ class App extends Component {
 
   }
   onNewUser(username) {
-
-    this.socket.send(JSON.stringify(username));
-    this.setState({
-          currentUser: {name:username}
-      })
+    const neUser = {type:'postUser',username:username}
+    this.socket.send(JSON.stringify(neUser));
+    this.setState({currentUser: {name: username}});
+    console.log(this.state.currentUser)
   }
   render() {
 
