@@ -3,7 +3,6 @@ import Message from './Message.jsx';
 
 class MessageList extends Component {
   render() {
-
   const messages = this.props.messages.map(message =>{
 
     if(message.type === 'incomingNotification') {
@@ -13,10 +12,9 @@ class MessageList extends Component {
         </div>)
          } else {
           return (
-            <Message username={message.username} content= {message.content} key={message.id}/>)
+            <Message username={message.username} content= {message.content} key={message.id} color={this.props.color}/>)
          }
   });
-
     return (
       <main className="messages">
         { messages }

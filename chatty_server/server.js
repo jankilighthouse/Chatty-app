@@ -2,7 +2,6 @@ const express = require('express');
 const SocketServer = require('ws').Server;
 const uuidV3 = require('uuid');
 
-
 // Set the port to 3001
 const PORT = 3001;
 // Create a new express server
@@ -14,6 +13,7 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 let sharedMessage = '';
+let arraycolor = ['#a3fd7f', '#FFFF00', '#800000', '#2980B9'];
 
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
@@ -24,6 +24,17 @@ wss.broadcast = function broadcast(data) {
    }
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  let newColor = arraycolor.pop();
+
+  if(!newColor) {
+    arraycolor = ['#a3fd7f', '#FFFF00', '#800000', '#2980B9'];
+    newColor=arraycolor.pop();
+
+
+  }
+  const color = {type:'color', color : newColor};
+  ws.send(JSON.stringify(color));
+
   const activeUsers = {'type':'userCount' ,'count':wss.clients.size};
   sharedMessage = activeUsers;
   wss.broadcast(sharedMessage);
@@ -31,7 +42,6 @@ wss.on('connection', (ws) => {
 // Broadcast to all.
    ws.on('message',(clientData) => {
     const data = JSON.parse(clientData);
-    console.log('HELLOOOOOOOO',data)
 
       switch(data.type){
         case 'postMessage':

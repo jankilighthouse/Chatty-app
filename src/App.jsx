@@ -8,7 +8,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
       currentUser: {name: "Bob"},
+      color:'null',
       messages: [], // messages coming from the server will be stored here as they arrive
       activeUsers: {}
     };
@@ -25,9 +27,7 @@ class App extends Component {
      }
 
      websocket.onmessage = (event) => {
-      console.log(event);
        const data = JSON.parse(event.data);
-        console.log(data);
 
        switch(data.type) {
         case 'incomingMessage':
@@ -47,11 +47,9 @@ class App extends Component {
         this.setState({messages:notifications});
         break;
 
-        // case 'incomingUser':
-        // const incUser = data;
-        // const currentUser = this.state.currentUser.name.concat(incUser);
-        // //this.setState({currentUser:currentUser})
-        // break;
+        case 'color':
+        this.setState({color:data.color});
+        break;
 
         default:
           throw new Error('Unknown event type ' + data.type);
@@ -59,17 +57,11 @@ class App extends Component {
      }
 
   }
-
  onNewMessage(msg) {
-    // console.log(msg);
-    // let newId = this.state.messages.length + 1;
+
     let newMessage = {type:'postMessage',username: msg.username,content: msg.content};
     let templist = this.state.messages;
     this.socket.send(JSON.stringify(newMessage));
-    // templist.push(newMessage);
-    // this.setState({
-    //       messages: templist
-    //   })
 
   }
   onNewUser(username) {
@@ -83,7 +75,7 @@ class App extends Component {
       return (
         <div>
           <Navbar activeUsers = {this.state.activeUsers} />
-          <MessageList messages={this.state.messages} />
+          <MessageList messages={this.state.messages} color = {this.state.color} />
           <ChatBar currentUser={this.state.currentUser.name}
                   onNewMessage = {this.onNewMessage}
                   onNewUser = {this.onNewUser}/>
@@ -92,5 +84,4 @@ class App extends Component {
   }
 
 }
-
 export default App;
