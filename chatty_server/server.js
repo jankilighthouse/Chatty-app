@@ -24,6 +24,9 @@ wss.broadcast = function broadcast(data) {
    }
 wss.on('connection', (ws) => {
   console.log('Client connected');
+  const activeUsers = {'type':'userCount' ,'count':wss.clients.size};
+  sharedMessage = activeUsers;
+  wss.broadcast(sharedMessage);
 
 // Broadcast to all.
    ws.on('message',(clientData) => {
@@ -45,20 +48,18 @@ wss.on('connection', (ws) => {
         sharedMessage = data;
         wss.broadcast(sharedMessage);
         break;
-
-        // case 'postUser':
-        // data.type = 'incomingUser';
-        // sharedMessage=data;
-        // wss.broadcast(sharedMessage);
-        // break;
-
         default:
         throw new Error('Unknown event type ' + data.type);
       }
     })
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    const activeUsers = {'type':'userCount' ,'count':wss.clients.size};
+    sharedMessage = activeUsers;
+    wss.broadcast(sharedMessage);
+    console.log('Client disconnected')
+  });
 });
 
 

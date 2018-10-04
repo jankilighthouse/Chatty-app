@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+
+import Navbar from './Navbar.jsx';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 
@@ -7,7 +9,8 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: "Bob"},
-      messages: [] // messages coming from the server will be stored here as they arrive
+      messages: [], // messages coming from the server will be stored here as they arrive
+      activeUsers: {}
     };
       this.onNewMessage = this.onNewMessage.bind(this);
       this.onNewUser = this.onNewUser.bind(this);
@@ -33,6 +36,9 @@ class App extends Component {
         this.setState({messages:messages});
         break;
 
+        case 'userCount':
+        this.setState({activeUsers: data})
+        break;
 
         case 'incomingNotification' :
           // for handle incoming notification
@@ -74,13 +80,9 @@ class App extends Component {
 
   }
   render() {
-
       return (
         <div>
-          <nav className="navbar">
-            <a href="/" className="navbar-brand">Chatty</a>
-          </nav>
-
+          <Navbar activeUsers = {this.state.activeUsers} />
           <MessageList messages={this.state.messages} />
           <ChatBar currentUser={this.state.currentUser.name}
                   onNewMessage = {this.onNewMessage}

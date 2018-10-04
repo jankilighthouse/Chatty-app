@@ -73,6 +73,7 @@
       position: fixed;
       right: 0;
       top: 0;
+
     }
 
     .navbar-brand {
@@ -85,4 +86,11 @@
       line-height: 60px;
       padding: 0 10px;
       text-decoration: none;
+
     }
+    .user-count {
+      color: inherit;
+      float:right;
+      font-size: 18px;
+      margin-top:18px;
+ }
