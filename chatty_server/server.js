@@ -31,18 +31,26 @@ wss.on('connection', (ws) => {
     console.log('HELLOOOOOOOO',data)
 
       switch(data.type){
-        case 'postmessage':
-        data.type = 'incMessage';
+        case 'postMessage':
+        data.type = 'incomingMessage';
         data.id =uuidV3();
         sharedMessage=data;
         wss.broadcast(sharedMessage);
         break;
 
-        case 'postUser':
-        data.type = 'incUser';
-        sharedMessage=data;
+        case 'postNotification':
+        // handle post notification from client
+        data.type = 'incomingNotification';
+         data.id =uuidV3();
+        sharedMessage = data;
         wss.broadcast(sharedMessage);
         break;
+
+        // case 'postUser':
+        // data.type = 'incomingUser';
+        // sharedMessage=data;
+        // wss.broadcast(sharedMessage);
+        // break;
 
         default:
         throw new Error('Unknown event type ' + data.type);

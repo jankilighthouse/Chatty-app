@@ -27,17 +27,25 @@ class App extends Component {
         console.log(data);
 
        switch(data.type) {
-        case 'incMessage':
-        const incMessage = data;
-        const messages= this.state.messages.concat(incMessage);
+        case 'incomingMessage':
+        const incomingMessage = data;
+        const messages= this.state.messages.concat(incomingMessage);
         this.setState({messages:messages});
         break;
 
-        case 'incUser':
-        const incUser = data;
-        const currentUser = this.state.currentUser.name.concat(incUser);
-        //this.setState({currentUser:currentUser})
+
+        case 'incomingNotification' :
+          // for handle incoming notification
+        const incomingNotification = data;
+        const notifications = this.state.messages.concat(incomingNotification);
+        this.setState({messages:notifications});
         break;
+
+        // case 'incomingUser':
+        // const incUser = data;
+        // const currentUser = this.state.currentUser.name.concat(incUser);
+        // //this.setState({currentUser:currentUser})
+        // break;
 
         default:
           throw new Error('Unknown event type ' + data.type);
@@ -49,7 +57,7 @@ class App extends Component {
  onNewMessage(msg) {
     // console.log(msg);
     // let newId = this.state.messages.length + 1;
-    let newMessage = {type:'postmessage',username: msg.username,content: msg.content};
+    let newMessage = {type:'postMessage',username: msg.username,content: msg.content};
     let templist = this.state.messages;
     this.socket.send(JSON.stringify(newMessage));
     // templist.push(newMessage);
@@ -59,10 +67,11 @@ class App extends Component {
 
   }
   onNewUser(username) {
-    const neUser = {type:'postUser',username:username}
-    this.socket.send(JSON.stringify(neUser));
+    const notification = {type:'postNotification',content:'User ' + this.state.currentUser.name + ' has changed their name to User ' + username}
+    this.socket.send(JSON.stringify(notification));
     this.setState({currentUser: {name: username}});
     console.log(this.state.currentUser)
+
   }
   render() {
 

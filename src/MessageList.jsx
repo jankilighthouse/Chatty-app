@@ -5,8 +5,16 @@ class MessageList extends Component {
   render() {
 
   const messages = this.props.messages.map(message =>{
-    return (
-      <Message username={message.username} content= {message.content} key={message.id}/>)
+
+    if(message.type === 'incomingNotification') {
+      return (
+      <div className="message system" key={message.id}>
+        {message.content}
+        </div>)
+         } else {
+          return (
+            <Message username={message.username} content= {message.content} key={message.id}/>)
+         }
   });
 
     return (
@@ -17,4 +25,3 @@ class MessageList extends Component {
   }
 }
 export default MessageList;
-
