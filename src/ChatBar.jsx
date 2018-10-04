@@ -3,11 +3,9 @@ import React, {Component} from 'react';
 class ChatBar extends Component {
   constructor() {
     super();
-
     this.onKeyPress = this.onKeyPress.bind(this);
-   this.onUserChanged=this.onUserChanged.bind(this);
+    this.onUserChanged=this.onUserChanged.bind(this);
   }
-
   onKeyPress(e) {
     if(e.key === 'Enter') {
       this.props.onNewMessage({username:this.props.currentUser,content:e.target.value});
