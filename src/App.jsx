@@ -7,8 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name:'Bob'},
-      color:'null',
+      currentUser: {name:'Anonymous',color: '#' + Math.floor(Math.random()*16777215).toString(16)},
       messages: [], // messages coming from the server will be stored here as they arrive
       activeUsers: {}
     };
@@ -42,29 +41,26 @@ class App extends Component {
           const notifications = this.state.messages.concat(incomingNotification);
           this.setState({messages:notifications});
           break;
-        case 'color':
-          // Handles color for every user
-          this.setState({color:data.color});
-          break;
         default:
           throw new Error('Unknown event type ' + data.type);
        }
      }
   }
  onNewMessage(msg) {
-   let newMessage = {type:'postMessage',username: msg.username,content: msg.content};
+   let newMessage = {type:'postMessage',color:this.state.currentUser.color,username: msg.username,content: msg.content};
+   // this.setState(newMessage);
    this.socket.send(JSON.stringify(newMessage));
   }
   onNewUser(username) {
-    const notification = {type:'postNotification',content:'User ' + this.state.currentUser.name + ' has changed their name to User ' + username}
+    const notification = {type:'postNotification',color: this.state.currentUser.color,content:'User ' + this.state.currentUser.name + ' has changed their name to User ' + username}
     this.socket.send(JSON.stringify(notification));
-    this.setState({currentUser: {name: username}});
+    this.setState({currentUser: {name: username, color: this.state.currentUser.color }});
   }
   render() {
       return (
         <div>
           <Navbar activeUsers = {this.state.activeUsers} />
-          <MessageList messages={this.state.messages} color = {this.state.color} />
+          <MessageList messages={this.state.messages} />
           <ChatBar currentUser={this.state.currentUser.name}
                   onNewMessage = {this.onNewMessage}
                   onNewUser = {this.onNewUser}/>

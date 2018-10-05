@@ -11,7 +11,6 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 let sharedMessage = '';
-let arraycolor = ['#a3fd7f', '#FFFF00', '#800000', '#2980B9'];
 
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
@@ -21,14 +20,6 @@ wss.broadcast = function broadcast(data) {
    }
 wss.on('connection', (ws) => {
   console.log('Client connected');
-  let newColor = arraycolor.pop();
-
-  if(!newColor) {
-    arraycolor = ['#a3fd7f', '#FFFF00', '#800000', '#2980B9'];
-    newColor=arraycolor.pop();
-  }
-  const color = {type:'color', color : newColor};
-  ws.send(JSON.stringify(color));
   const activeUsers = {'type':'userCount' ,'count':wss.clients.size};
   sharedMessage = activeUsers;
   wss.broadcast(sharedMessage);
@@ -40,6 +31,7 @@ wss.on('connection', (ws) => {
           data.type = 'incomingMessage';
           data.id =uuidV3();
           sharedMessage=data;
+          console.log(sharedMessage);
           wss.broadcast(sharedMessage);
         break;
         case 'postNotification':
