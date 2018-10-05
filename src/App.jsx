@@ -50,7 +50,6 @@ class App extends Component {
           throw new Error('Unknown event type ' + data.type);
        }
      }
-
   }
  onNewMessage(msg) {
    let newMessage = {type:'postMessage',username: msg.username,content: msg.content};
