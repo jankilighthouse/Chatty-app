@@ -12,7 +12,7 @@ When the number of connected users changes, this count will be updated for all c
 ## Getting Started
 Clone the boilerplate and create your own git repo.
 
-git clone git@github.com:peachy19/ChattyApp.git [YOUR PROJECT NAME]
+git clone git@github.com:jankilighthouse/Chatty-app.git [YOUR PROJECT NAME]
 git remote rm origin
 git remote add origin [YOUR NEW REPOSITORY]
 Install the dependencies and start the server.
