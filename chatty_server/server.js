@@ -11,7 +11,6 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 let sharedMessage = '';
-
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
       client.send(JSON.stringify(data));
